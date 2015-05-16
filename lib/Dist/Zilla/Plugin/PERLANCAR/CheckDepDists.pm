@@ -14,29 +14,37 @@ with (
 
 use App::lcpan::Call qw(call_lcpan_script);
 use Module::List qw(list_modules);
+use Sub::NoRepeat qw(norepeat);
 use Term::ANSIColor;
 
 use namespace::autoclean;
 
 sub after_build {
     use experimental 'smartmatch';
+    no strict 'refs';
 
     my $self = shift;
 
-    $self->log_debug(["Listing all ::Lumped & ::Fattened modules ..."]);
-    my $mods = list_modules("", {list_modules=>1, recurse=>1});
-    for (sort keys %$mods) {
-        next unless $mod =~ /.+::(Lumped|Fattened)$/;
-        my $lump = $1 eq 'Lumped';
-        $self->log_debug(["Checking against %s", $mod]);
-        my $mod_pm = do { local $_ = $mod; s!::!/!g; "$_.pm" };
-        require $mod_pm;
-        my $dists = \@{"$mod\::" . ($lump ? "LUMPED_DISTS" : "FATTENED_DISTS")};
-        if ($self->zilla->name ~~ @$dists) {
-            my $dist = $mod; $dist =~ s/::/-/g;
-            say colored(["bold cyan"], "This distribution also needs to be rebuilt: $dist");
-        }
-    }
+    norepeat(
+        key => __PACKAGE__ . ' ' . $self->zilla->name,
+        period => '8h',
+        code => sub {
+            $self->log_debug(["Listing all ::Lumped & ::Fattened modules ..."]);
+            my $mods = list_modules("", {list_modules=>1, recurse=>1});
+            for my $mod (sort keys %$mods) {
+                next unless $mod =~ /.+::(Lumped|Fattened)$/;
+                my $lump = $1 eq 'Lumped';
+                $self->log_debug(["Checking against %s", $mod]);
+                my $mod_pm = do { local $_ = $mod; s!::!/!g; "$_.pm" };
+                require $mod_pm;
+                my $dists = \@{"$mod\::" . ($lump ? "LUMPED_DISTS" : "FATTENED_DISTS")};
+                if ($self->zilla->name ~~ @$dists) {
+                    my $dist = $mod; $dist =~ s/::/-/g;
+                    say colored(["bold cyan"], "This distribution also needs to be rebuilt: $dist");
+                }
+            }
+        },
+    );
 }
 
 __PACKAGE__->meta->make_immutable;

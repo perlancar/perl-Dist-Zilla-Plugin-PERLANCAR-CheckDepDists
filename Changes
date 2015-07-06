@@ -1,5 +1,10 @@
 Revision history for Dist-Zilla-PERLANCAR-CheckDepDists
 
+0.02    2015-07-06 (PERLANCAR)
+
+	- Now support packed (depak) dists instead of fattened dists.
+
+
 0.01     2015-05-16 (PERLANCAR)
 
          - First release.

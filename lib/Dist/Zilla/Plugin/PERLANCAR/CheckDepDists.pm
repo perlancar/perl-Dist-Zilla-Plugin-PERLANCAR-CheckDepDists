@@ -29,10 +29,10 @@ sub after_build {
         key => __PACKAGE__ . ' ' . $self->zilla->name,
         period => '8h',
         code => sub {
-            $self->log_debug(["Listing all ::Lumped & ::Packed modules ..."]);
+            $self->log_debug(["Listing all ::Lumped & ::Packed/::FatPacked/::DataPacked modules ..."]);
             my $mods = list_modules("", {list_modules=>1, recurse=>1});
             for my $mod (sort keys %$mods) {
-                next unless $mod =~ /.+::(Lumped|Packed)$/;
+                next unless $mod =~ /.+::(Lumped|Packed|FatPacked|DataPacked)$/;
                 my $lump = $1 eq 'Lumped';
                 $self->log_debug(["Checking against %s", $mod]);
                 my $mod_pm = do { local $_ = $mod; s!::!/!g; "$_.pm" };
@@ -79,11 +79,11 @@ to rebuild the associated lump dist.
 =item *
 
 In the after_build phase, search your local installation for all packed dists
-(via searching all modules whose name ends with C<::Packed>). Inside each of
-these modules, there is a C<@PACKED_DISTS> array which lists all the dists that
-the packed dist includes. When the current dist you're building is listed in
-C<@PACKED_DISTS>, the plugin will issue a notification that you will also need
-to rebuild the associated packed dist.
+(via searching all modules whose name ends with C<::Packed>, C<::Fatpacked>,
+C<::DataPacked>). Inside each of these modules, there is a C<@PACKED_DISTS>
+array which lists all the dists that the packed dist includes. When the current
+dist you're building is listed in C<@PACKED_DISTS>, the plugin will issue a
+notification that you will also need to rebuild the associated packed dist.
 
 =back
 

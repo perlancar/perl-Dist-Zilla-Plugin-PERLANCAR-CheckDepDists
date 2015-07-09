@@ -1,5 +1,10 @@
 Revision history for Dist-Zilla-PERLANCAR-CheckDepDists
 
+0.03    2015-07-09 (PERLANCAR)
+
+	- Also search packed dists in ::FatPacked and ::DataPacked.
+
+
 0.02    2015-07-06 (PERLANCAR)
 
 	- Now support packed (depak) dists instead of fattened dists.

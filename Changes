@@ -1,5 +1,10 @@
 Revision history for Dist-Zilla-PERLANCAR-CheckDepDists
 
+0.04    2015-07-28 (PERLANCAR)
+
+	- Search for .tag-requires-dist-<DISTNAME> tag files.
+
+
 0.03    2015-07-09 (PERLANCAR)
 
 	- Also search packed dists in ::FatPacked and ::DataPacked.

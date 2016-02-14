@@ -1,5 +1,11 @@
 Revision history for Dist-Zilla-PERLANCAR-CheckDepDists
 
+0.05    2016-02-14 (PERLANCAR)
+
+	- Find Bencher-Scenario dists that require our dist and alert a
+	  reminder to rebuild them.
+
+
 0.04    2015-07-28 (PERLANCAR)
 
 	- Search for .tag-requires-dist-<DISTNAME> tag files.

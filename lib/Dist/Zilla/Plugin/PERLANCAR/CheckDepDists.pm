@@ -32,6 +32,7 @@ sub after_build {
         key => __PACKAGE__ . ' ' . $self->zilla->name,
         period => '8h',
         code => sub {
+
             $self->log_debug(["Listing all ::Lumped & ::Packed/::FatPacked/::DataPacked modules ..."]);
             my $mods = list_modules("", {list_modules=>1, recurse=>1});
             for my $mod (sort keys %$mods) {
@@ -48,7 +49,7 @@ sub after_build {
             }
 
             # XXX some configurability wrt repos directory
-            $self->log_debug(["Finding all repos which requires our dist ..."]);
+            $self->log_debug(["Finding all repos which requires our dist (via .tag-requires-dist) ..."]);
             {
                 local $CWD = "..";
                 my $tag_filename = ".tag-requires-dist-" . $self->zilla->name;
@@ -59,6 +60,25 @@ sub after_build {
                     }
                 }
             }
+
+            $self->log_debug(["Finding all Bencher::Scenario repos which requires our dist ..."]);
+            {
+                my $files = $self->zilla->find_files(':InstallModules');
+                my @modules;
+                for (@$files) {
+                    my $mod = $_->name;
+                    $mod =~ s!^lib/!!;
+                    $mod =~ s!\.pm$!!;
+                    $mod =~ s!/!::!g;
+                    push @modules, $mod;
+                }
+                my $res = call_lcpan_script(argv => ["rdeps", @modules]);
+                for (@$res) {
+                    next unless $_->{dist} =~ /^Bencher-Scenarios?-/;
+                    say colored([$color], "This Bencher-Scenario repo could also use a rebuild: perl-$_->{dist}");
+                }
+            }
+
         },
     );
 }

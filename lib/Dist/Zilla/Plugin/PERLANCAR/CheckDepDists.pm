@@ -73,7 +73,14 @@ sub after_build {
                     push @modules, $mod;
                 }
                 my $res = call_lcpan_script(argv => ["rdeps", @modules]);
-                for (@$res) {
+
+                # our modules are (still) unknown
+                last if $res->[0] == 404;
+
+                $self->log_fatal(["Can't lcpan rdeps: %s - %s", $res->[0], $res->[1]])
+                    unless $res->[0] == 200;
+
+                for (@{$res->[2]}) {
                     next unless $_->{dist} =~ /^Bencher-Scenarios?-/;
                     say colored([$color], "This Bencher-Scenario repo could also use a rebuild: perl-$_->{dist}");
                 }

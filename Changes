@@ -1,29 +1,29 @@
-0.06    2016-02-16 (PERLANCAR)
+0.06    2016-02-16  Released-By: PERLANCAR
 
 	- Adjust to App::lcpan::Call 0.07.
 
 
-0.05    2016-02-14 (PERLANCAR)
+0.05    2016-02-14  Released-By: PERLANCAR
 
 	- Find Bencher-Scenario dists that require our dist and alert a
 	  reminder to rebuild them.
 
 
-0.04    2015-07-28 (PERLANCAR)
+0.04    2015-07-28  Released-By: PERLANCAR
 
 	- Search for .tag-requires-dist-<DISTNAME> tag files.
 
 
-0.03    2015-07-09 (PERLANCAR)
+0.03    2015-07-09  Released-By: PERLANCAR
 
 	- Also search packed dists in ::FatPacked and ::DataPacked.
 
 
-0.02    2015-07-06 (PERLANCAR)
+0.02    2015-07-06  Released-By: PERLANCAR
 
 	- Now support packed (depak) dists instead of fattened dists.
 
 
-0.01     2015-05-16 (PERLANCAR)
+0.01     2015-05-16  Released-By: PERLANCAR
 
          - First release.
